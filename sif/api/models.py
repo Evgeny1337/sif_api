@@ -60,7 +60,6 @@ class DictSection(models.Model):
 
 
 class DictCatalog(models.Model):
-    """Каталог книг"""
     header = models.CharField(verbose_name='Заголовок', max_length=300, blank=True, null=True)
     title = models.CharField(verbose_name='Название', max_length=300, blank=True, null=True)
     author = models.CharField(verbose_name='Автор', max_length=150, blank=True, null=True)
