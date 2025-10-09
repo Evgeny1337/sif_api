@@ -1,50 +1,5 @@
 from django.db import models
 
-
-class DatabaseChangeLog(models.Model):
-    """Лог изменений базы данных"""
-    id = models.CharField(
-        verbose_name='ID',
-        max_length=255,
-        primary_key=True  # Добавлено primary_key=True
-    )
-    author = models.CharField(verbose_name='Автор', max_length=255)
-    filename = models.CharField(verbose_name='Имя файла', max_length=255)
-    date_executed = models.DateTimeField(verbose_name='Дата выполнения')
-    order_executed = models.IntegerField(verbose_name='Порядок выполнения')
-    exec_type = models.CharField(verbose_name='Тип выполнения', max_length=10)
-    md5sum = models.CharField(verbose_name='MD5 сумма', max_length=35, blank=True, null=True)
-    description = models.CharField(verbose_name='Описание', max_length=255, blank=True, null=True)
-    comments = models.CharField(verbose_name='Комментарии', max_length=255, blank=True, null=True)
-    tag = models.CharField(verbose_name='Тег', max_length=255, blank=True, null=True)
-    liquibase = models.CharField(verbose_name='Liquibase', max_length=20, blank=True, null=True)
-    contexts = models.CharField(verbose_name='Контексты', max_length=255, blank=True, null=True)
-    labels = models.CharField(verbose_name='Метки', max_length=255, blank=True, null=True)
-    deployment_id = models.CharField(verbose_name='ID деплоя', max_length=10, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'databasechangelog'
-        verbose_name = 'Лог изменений БД'
-        verbose_name_plural = 'Логи изменений БД'
-
-    def __str__(self):
-        return f"{self.filename} - {self.author}"
-
-
-class DatabaseChangeLogLock(models.Model):
-    """Блокировка лога изменений БД"""
-    locked = models.IntegerField(verbose_name='Заблокировано')
-    lock_granted = models.DateTimeField(verbose_name='Время блокировки', blank=True, null=True)
-    locked_by = models.CharField(verbose_name='Заблокировано кем', max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'databasechangeloglock'
-        verbose_name = 'Блокировка лога БД'
-        verbose_name_plural = 'Блокировки логов БД'
-
-
 class DictSection(models.Model):
     """Раздел каталога"""
     name = models.CharField(verbose_name='Название', max_length=100)
@@ -94,7 +49,8 @@ class DictBook(models.Model):
         DictCatalog,
         verbose_name='Каталог',
         on_delete=models.DO_NOTHING,
-        db_column='id_catalog'
+        db_column='id_catalog',
+        related_name='dict_books',
     )
     inv_num = models.CharField(verbose_name='Инвентарный номер', max_length=50, blank=True, null=True)
     serial_num = models.IntegerField(verbose_name='Серийный номер', blank=True, null=True)
@@ -132,9 +88,9 @@ class DictCatalogFile(models.Model):
 class DictEmployee(models.Model):
     """Сотрудник"""
     tab_number = models.IntegerField(verbose_name='Табельный номер', blank=True, null=True)
-    first_name = models.CharField(verbose_name='Имя', max_length=50, blank=True, null=True)
-    second_name = models.CharField(verbose_name='Отчество', max_length=50, blank=True, null=True)
-    last_name = models.CharField(verbose_name='Фамилия', max_length=50, blank=True, null=True)
+    first_name = models.CharField(verbose_name='Имя', max_length=50, blank=True, null=True, db_column='firstname')
+    second_name = models.CharField(verbose_name='Отчество', max_length=50, blank=True, null=True, db_column='secondname')
+    last_name = models.CharField(verbose_name='Фамилия', max_length=50, blank=True, null=True, db_column='lastname')
     filial_name = models.CharField(verbose_name='Филиал', max_length=50, blank=True, null=True)
     dept_name = models.CharField(verbose_name='Отдел', max_length=300, blank=True, null=True)
     post_name = models.CharField(verbose_name='Должность', max_length=300, blank=True, null=True)

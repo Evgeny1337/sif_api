@@ -1,21 +1,24 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from .serializers import DictRoleSerializer
+
 from .views import DictCatalogViewSet, DictSectionViewSet, DictOrderStateViewSet, DictEmployeeViewSet, DictBookViewSet, \
-    DictUserViewSet, DictCatalogFileViewSet, OrderCatalogViewSet
+    DictUserViewSet, DictCatalogFileViewSet, OrderCatalogViewSet, LibraryStateView, DictRoleViewSet, \
+    LibraryStateDetailView
 
 router = routers.DefaultRouter()
-router.register(r'catalog', DictCatalogViewSet)
-router.register(r'section',DictSectionViewSet)
-router.register(r'state', DictOrderStateViewSet)
-router.register(r'role', DictRoleSerializer)
-router.register(r'employee', DictEmployeeViewSet)
-router.register(r'book', DictBookViewSet)
-router.register(r'user',DictUserViewSet)
-router.register('file', DictCatalogFileViewSet)
-router.register(r'order',OrderCatalogViewSet)
+router.register(r'catalog', DictCatalogViewSet, basename='dictCatalog')
+router.register(r'section',DictSectionViewSet, basename='dictSection')
+router.register(r'state', DictOrderStateViewSet, basename='dictState')
+router.register(r'role', DictRoleViewSet, basename='dictRole')
+router.register(r'employee', DictEmployeeViewSet, basename='dictEmployee')
+router.register(r'book', DictBookViewSet, basename='dictBook')
+router.register(r'user',DictUserViewSet,basename='dictUser')
+router.register('file', DictCatalogFileViewSet, basename='catalogfile')
+router.register(r'order',OrderCatalogViewSet, basename='ordercatalog')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path(r'librarystate/', LibraryStateView.as_view(), name='library_state'),
+    path(r'librarystatedetail/', LibraryStateDetailView.as_view(), name='library_state_detail'),
 ]
